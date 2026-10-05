@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GestãON — Controle de Vendas e Estoque</title>
+  <!-- Tailwind CSS para Design Moderno -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Ícones FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 font-sans min-h-screen flex flex-col">
+
+  <!-- TELA DE LOGIN (RF-01) -->
+  <div id="login-screen" class="fixed inset-0 bg-slate-900 bg-opacity-95 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
+      <div class="text-center mb-6">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 text-white rounded-2xl text-2xl font-bold mb-3 shadow-lg shadow-indigo-200">
+          G
+        </div>
+        <h1 class="text-3xl font-extrabold text-gray-800">Gestã<span class="text-indigo-600">ON</span></h1>
+        <p class="text-gray-500 text-sm mt-1">Gestão inteligente para o microempreendedor</p>
+      </div>
+
+      <form id="form-login" onsubmit="realizarLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">E-mail do Usuário</label>
+          <div class="relative">
+            <i class="fa-solid fa-envelope absolute left-3 top-3 text-gray-400"></i>
+            <input type="email" id="login-email" value="mariana@gestaon.com" required class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Senha</label>
+          <div class="relative">
+            <i class="fa-solid fa-lock absolute left-3 top-3 text-gray-400"></i>
+            <input type="password" id="login-senha" value="12345678" required class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm">
+          </div>
+        </div>
+        <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition shadow-md shadow-indigo-200 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-right-to-bracket"></i> Entrar no Sistema
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- NAVEGAÇÃO PRINCIPAL -->
+  <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-xl shadow-inner">G</div>
+        <span class="text-xl font-bold tracking-wide">Gestã<span class="text-indigo-400">ON</span></span>
+      </div>
+      <div class="flex items-center gap-4">
+        <span id="user-display" class="text-sm font-medium text-indigo-200 hidden sm:inline">Mariana Silva</span>
+        <button onclick="logout()" class="text-xs bg-indigo-800 hover:bg-indigo-700 px-3 py-1.5 rounded-lg border border-indigo-600 transition">
+          <i class="fa-solid fa-power-off"></i> Sair
+        </button>
+      </div>
+    </div>
+    <!-- MENUS DE NAVEGAÇÃO -->
+    <nav class="bg-indigo-950 px-4">
+      <div class="max-w-7xl mx-auto flex gap-1 overflow-x-auto py-2 text-sm font-medium">
+        <button onclick="mudarAba('dashboard')" id="btn-dashboard" class="nav-btn px-4 py-2 rounded-lg bg-indigo-600 text-white flex items-center gap-2">
+          <i class="fa-solid fa-chart-pie"></i> Dashboard
+        </button>
+        <button onclick="mudarAba('produtos')" id="btn-produtos" class="nav-btn px-4 py-2 rounded-lg hover:bg-indigo-800 text-indigo-200 flex items-center gap-2">
+          <i class="fa-solid fa-boxes-stacked"></i> Estoque / Produtos
+        </button>
+        <button onclick="mudarAba('vendas')" id="btn-vendas" class="nav-btn px-4 py-2 rounded-lg hover:bg-indigo-800 text-indigo-200 flex items-center gap-2">
+          <i class="fa-solid fa-cart-shopping"></i> Registrar Venda
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full">
+
+    <!-- 1. DASHBOARD ANALÍTICO (RF-05) -->
+    <section id="aba-dashboard" class="space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Faturamento Total</p>
+            <h3 id="stat-faturamento" class="text-2xl font-black text-gray-800 mt-1">R$ 0,00</h3>
+          </div>
+          <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-xl">
+            <i class="fa-solid fa-dollar-sign"></i>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total de Vendas</p>
+            <h3 id="stat-vendas" class="text-2xl font-black text-gray-800 mt-1">0</h3>
+          </div>
+          <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-xl">
+            <i class="fa-solid fa-bag-shopping"></i>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Alertas de Estoque Crítico</p>
+            <h3 id="stat-alertas" class="text-2xl font-black text-rose-600 mt-1">0</h3>
+          </div>
+          <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center text-xl">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabela de Vendas Recentes -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="p-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+          <h2 class="font-bold text-gray-700 flex items-center gap-2">
+            <i class="fa-solid fa-clock-rotate-left text-indigo-600"></i> Histórico de Vendas Recentes
+          </h2>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
+              <tr>
+                <th class="p-3">ID</th>
+                <th class="p-3">Produto</th>
+                <th class="p-3">Qtd</th>
+                <th class="p-3">Pagamento</th>
+                <th class="p-3">Valor Total</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-vendas-body" class="divide-y divide-gray-100">
+              <!-- Renderizado via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. GESTÃO DE ESTOQUE E PRODUTOS (RF-02 & RF-03) -->
+    <section id="aba-produtos" class="space-y-6 hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Cadastrar Produto -->
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 h-fit">
+          <h2 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-plus-circle text-indigo-600"></i> Cadastrar Novo Produto
+          </h2>
+          <form id="form-produto" onsubmit="adicionarProduto(event)" class="space-y-3">
+            <div>
+              <label class="block text-xs font-semibold text-gray-600">Nome do Produto *</label>
+              <input type="text" id="prod-nome" required class="w-full mt-1 p-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-xs font-semibold text-gray-600">Preço Custo (R$)</label>
+                <input type="number" step="0.01" id="prod-custo" required class="w-full mt-1 p-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-600">Preço Venda (R$)</label>
+                <input type="number" step="0.01" id="prod-venda" required class="w-full mt-1 p-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-xs font-semibold text-gray-600">Qtd em Estoque</label>
+                <input type="number" id="prod-qtd" required class="w-full mt-1 p-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-600">Estoque Mínimo</label>
+                <input type="number" id="prod-min" required class="w-full mt-1 p-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              </div>
+            </div>
+            <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg text-sm shadow transition">
+              Salvar Produto
+            </button>
+          </form>
+        </div>
+
+        <!-- Lista de Produtos -->
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div class="p-4 bg-gray-50 border-b border-gray-200">
+            <h2 class="font-bold text-gray-700 flex items-center gap-2">
+              <i class="fa-solid fa-list text-indigo-600"></i> Catálogo e Posição do Estoque
+            </h2>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
+                <tr>
+                  <th class="p-3">Produto</th>
+                  <th class="p-3">Preço Venda</th>
+                  <th class="p-3">Estoque</th>
+                  <th class="p-3">Status</th>
+                  <th class="p-3 text-center">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="tabela-produtos-body" class="divide-y divide-gray-100">
+                <!-- Renderizado via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. CHECKOUT DE VENDAS RÁPIDAS (RF-04) -->
+    <section id="aba-vendas" class="space-y-6 hidden">
+      <div class="max-w-xl mx-auto bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+        <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-cash-register text-emerald-600"></i> Registrar Nova Venda (Checkout)
+        </h2>
+
+        <form id="form-venda" onsubmit="realizarVenda(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Selecione o Produto *</label>
+            <select id="venda-produto" onchange="atualizarPrecoVenda()" required class="w-full p-2.5 border rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+              <!-- Opções via JS -->
+            </select>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Quantidade *</label>
+              <input type="number" id="venda-qtd" min="1" value="1" onchange="calcularTotalVenda()" onkeyup="calcularTotalVenda()" required class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Forma de Pagamento</label>
+              <select id="venda-pagamento" class="w-full p-2.5 border rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                <option value="PIX">PIX</option>
+                <option value="Cartão de Crédito">Cartão de Crédito</option>
+                <option value="Cartão de Débito">Cartão de Débito</option>
+                <option value="Dinheiro">Dinheiro</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200 flex justify-between items-center">
+            <span class="text-sm font-semibold text-emerald-800">Total a Pagar:</span>
+            <span id="venda-total-display" class="text-2xl font-black text-emerald-700">R$ 0,00</span>
+          </div>
+
+          <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-base shadow-lg shadow-emerald-200 transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-check-circle"></i> Finalizar Venda em 1 Clique
+          </button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="bg-white border-t py-4 text-center text-xs text-gray-500">
+    <strong>GestãON</strong> &copy; 2026 — Projeto Integrador Engenharia de Computação (Karoline Fernandes)
+  </footer>
+
+  <!-- LÓGICA EM JAVASCRIPT -->
+  <script>
+    // Estado da Aplicação (Simulação de Banco de Dados local)
+    let appState = {
+      produtos: [
+        { id: 1, nome: "Camiseta Algodão Premium", custo: 25.00, venda: 59.90, qtd: 15, min: 5 },
+        { id: 2, nome: "Calça Jeans Slim", custo: 45.00, venda: 119.90, qtd: 2, min: 5 }, // Estoque crítico!
+        { id: 3, nome: "Boné Streetwear", custo: 15.00, venda: 39.90, qtd: 20, min: 8 }
+      ],
+      vendas: [
+        { id: 101, produtoNome: "Camiseta Algodão Premium", qtd: 1, pagamento: "PIX", total: 59.90 }
+      ]
+    };
+
+    // Inicialização do App
+    document.addEventListener("DOMContentLoaded", () => {
+      renderizarTudo();
+    });
+
+    function realizarLogin(e) {
+      e.preventDefault();
+      document.getElementById("login-screen").classList.add("hidden");
+    }
+
+    function logout() {
+      document.getElementById("login-screen").classList.remove("hidden");
+    }
+
+    function mudarAba(abaNome) {
+      document.querySelectorAll("main > section").forEach(sec => sec.classList.add("hidden"));
+      document.querySelectorAll(".nav-btn").forEach(btn => {
+        btn.classList.remove("bg-indigo-600", "text-white");
+        btn.classList.add("hover:bg-indigo-800", "text-indigo-200");
+      });
+
+      document.getElementById(`aba-${abaNome}`).classList.remove("hidden");
+      const btnAtivo = document.getElementById(`btn-${abaNome}`);
+      btnAtivo.classList.add("bg-indigo-600", "text-white");
+      btnAtivo.classList.remove("hover:bg-indigo-800", "text-indigo-200");
+    }
+
+    function renderizarTudo() {
+      renderizarProdutos();
+      renderizarVendas();
+      renderizarDashboard();
+      atualizarSelectVendas();
+    }
+
+    function renderizarProdutos() {
+      const tbody = document.getElementById("tabela-produtos-body");
+      tbody.innerHTML = "";
+
+      appState.produtos.forEach(p => {
+        const isCritico = p.qtd <= p.min;
+        const statusBadge = isCritico 
+          ? `<span class="bg-rose-100 text-rose-700 text-xs font-bold px-2 py-1 rounded-full"><i class="fa-solid fa-triangle-exclamation"></i> Estoque Baixo (${p.qtd})</span>`
+          : `<span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-1 rounded-full">Normal (${p.qtd})</span>`;
+
+        tbody.innerHTML += `
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-semibold text-gray-800">${p.nome}</td>
+            <td class="p-3 text-gray-600">R$ ${p.venda.toFixed(2)}</td>
+            <td class="p-3 font-bold">${p.qtd} un</td>
+            <td class="p-3">${statusBadge}</td>
+            <td class="p-3 text-center">
+              <button onclick="deletarProduto(${p.id})" class="text-rose-500 hover:text-rose-700 px-2 py-1 text-xs">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function adicionarProduto(e) {
+      e.preventDefault();
+      const novo = {
+        id: Date.now(),
+        nome: document.getElementById("prod-nome").value,
+        custo: parseFloat(document.getElementById("prod-custo").value),
+        venda: parseFloat(document.getElementById("prod-venda").value),
+        qtd: parseInt(document.getElementById("prod-qtd").value),
+        min: parseInt(document.getElementById("prod-min").value)
+      };
+
+      appState.produtos.push(novo);
+      document.getElementById("form-produto").reset();
+      renderizarTudo();
+      alert("Produto cadastrado com sucesso!");
+    }
+
+    function deletarProduto(id) {
+      if(confirm("Tem certeza que deseja remover este produto?")) {
+        appState.produtos = appState.produtos.filter(p => p.id !== id);
+        renderizarTudo();
+      }
+    }
+
+    function atualizarSelectVendas() {
+      const select = document.getElementById("venda-produto");
+      select.innerHTML = `<option value="">-- Escolha um produto --</option>`;
+      appState.produtos.forEach(p => {
+        select.innerHTML += `<option value="${p.id}">${p.nome} (Estoque: ${p.qtd}) - R$ ${p.venda.toFixed(2)}</option>`;
+      });
+    }
+
+    function atualizarPrecoVenda() {
+      calcularTotalVenda();
+    }
+
+    function calcularTotalVenda() {
+      const pId = parseInt(document.getElementById("venda-produto").value);
+      const qtd = parseInt(document.getElementById("venda-qtd").value) || 0;
+      const produto = appState.produtos.find(p => p.id === pId);
+
+      const totalDisplay = document.getElementById("venda-total-display");
+      if (produto && qtd > 0) {
+        totalDisplay.textContent = `R$ ${(produto.venda * qtd).toFixed(2)}`;
+      } else {
+        totalDisplay.textContent = "R$ 0,00";
+      }
+    }
+
+    function realizarVenda(e) {
+      e.preventDefault();
+      const pId = parseInt(document.getElementById("venda-produto").value);
+      const qtd = parseInt(document.getElementById("venda-qtd").value);
+      const pagamento = document.getElementById("venda-pagamento").value;
+
+      const produto = appState.produtos.find(p => p.id === pId);
+
+      if (!produto) {
+        alert("Selecione um produto válido!");
+        return;
+      }
+
+      if (produto.qtd < qtd) {
+        alert(`Estoque insuficiente! Saldo atual: ${produto.qtd}`);
+        return;
+      }
+
+      // Baixa no Estoque (RF-03 & RF-04)
+      produto.qtd -= qtd;
+
+      // Registro de Venda
+      const novaVenda = {
+        id: 100 + appState.vendas.length + 1,
+        produtoNome: produto.nome,
+        qtd: qtd,
+        pagamento: pagamento,
+        total: produto.venda * qtd
+      };
+
+      appState.vendas.unshift(novaVenda);
+
+      document.getElementById("form-venda").reset();
+      calcularTotalVenda();
+      renderizarTudo();
+
+      alert("🎉 Venda realizada e estoque atualizado com sucesso!");
+      mudarAba('dashboard');
+    }
+
+    function renderizarVendas() {
+      const tbody = document.getElementById("tabela-vendas-body");
+      tbody.innerHTML = "";
+
+      appState.vendas.forEach(v => {
+        tbody.innerHTML += `
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-mono text-xs text-gray-500">#${v.id}</td>
+            <td class="p-3 font-medium text-gray-800">${v.produtoNome}</td>
+            <td class="p-3 font-bold">${v.qtd}</td>
+            <td class="p-3"><span class="bg-gray-100 text-gray-700 text-xs px-2 py-0.5 rounded">${v.pagamento}</span></td>
+            <td class="p-3 font-bold text-emerald-600">R$ ${v.total.toFixed(2)}</td>
+          </tr>
+        `;
+      });
+    }
+
+    function renderizarDashboard() {
+      const faturamento = appState.vendas.reduce((acc, v) => acc + v.total, 0);
+      const totalVendas = appState.vendas.length;
+      const alertas = appState.produtos.filter(p => p.qtd <= p.min).length;
+
+      document.getElementById("stat-faturamento").textContent = `R$ ${faturamento.toFixed(2)}`;
+      document.getElementById("stat-vendas").textContent = totalVendas;
+      document.getElementById("stat-alertas").textContent = alertas;
+    }
+  </script>
+</body>
+</html>
