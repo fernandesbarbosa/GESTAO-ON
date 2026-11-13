@@ -1,446 +1,160 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GestãON — Controle de Vendas e Estoque</title>
-  <!-- Tailwind CSS para Design Moderno -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Ícones FontAwesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GestãON</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f6f7;--card:#fff;--fg:#13222b;--mut:#5b6b75;--bd:#d8e2e6;--pri:#0b6e66;--onp:#fff;--warn:#e0a100;--bad:#c0392b;--ok:#1e8e4e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e171c;--card:#16232a;--fg:#e8f0f3;--mut:#9bb0ba;--bd:#27393f;--pri:#3fc1b4;--onp:#06201d}}
+*{box-sizing:inherit}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.45 "Plus Jakarta Sans",system-ui,sans-serif;padding-bottom:84px}
+main{max-width:980px;margin:0 auto;padding:16px}.top{margin-bottom:6px}.top small{color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:46vw}.top button{min-height:44px}
+h1{font-size:1.6rem;margin:.2rem 0 1rem;font-weight:800}h2{font-size:1.1rem;margin:1.2rem 0 .6rem}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:12px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.kpi b{display:block;font-size:1.6rem;font-weight:800}.kpi span{color:var(--mut);font-size:.9rem}
+button,.btn,select,input{font:inherit;color:inherit;min-height:48px;border-radius:10px;border:1px solid var(--bd);background:var(--card);padding:0 14px}
+input,select{width:100%}label{display:block;font-size:.9rem;color:var(--mut);margin:10px 0 4px}
+button.p{background:var(--pri);color:var(--onp);border-color:var(--pri);font-weight:600;cursor:pointer}
+button.g{background:none;cursor:pointer}button.d{color:var(--bad);cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--warn);outline-offset:2px}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between}.row>*{min-width:0}
+.item{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bd)}
+.item:last-child{border:0}.item small{color:var(--mut)}
+.tag{padding:2px 10px;border-radius:99px;font-size:.8rem;font-weight:600;color:#fff;background:var(--ok);white-space:nowrap}
+.tag.w{background:var(--warn);color:#222}.tag.r{background:var(--bad)}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--bd);display:flex;padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+nav button{flex:1;border:0;border-radius:0;min-height:56px;background:none;font-size:.8rem;cursor:pointer;color:var(--mut)}
+nav button.on{color:var(--pri);font-weight:800;box-shadow:inset 0 3px var(--pri)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}.chips button.on{background:var(--pri);color:var(--onp);border-color:var(--pri)}
+.scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{text-align:left;padding:8px;border-bottom:1px solid var(--bd);white-space:nowrap}
+.err{color:var(--bad);font-size:.9rem;min-height:1.2em}.pr{display:none}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:10px;z-index:9}
+:root[data-theme="dark"]{--bg:#0e171c;--card:#16232a;--fg:#e8f0f3;--mut:#9bb0ba;--bd:#27393f}
+.card{border-radius:18px;box-shadow:0 1px 2px rgba(10,30,40,.06),0 10px 28px -14px rgba(10,30,40,.28)}
+.kpi{border-left:5px solid var(--pri)}.kpi b{font-size:1.8rem;letter-spacing:-.02em}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.2rem}.logo{width:34px;height:34px;border-radius:11px;background:var(--pri);color:var(--onp);display:grid;place-items:center;font-weight:800}
+button.p{box-shadow:0 8px 16px -8px var(--pri)}button,input,select{border-radius:12px}
+nav{box-shadow:0 -6px 20px -12px rgba(0,0,0,.35)}nav button{min-height:62px;padding:6px 0}nav button span{font-size:1.3rem;display:block;line-height:1.1}
+.chips .sw{width:44px;min-height:44px;padding:0;border:3px solid transparent;border-radius:50%;cursor:pointer}.chips .sw.on{border-color:var(--fg)}
+@media print{nav,.np,.toast{display:none!important}.pr{display:block}body{background:#fff;color:#000}.card{border:0}}
+</style>
 </head>
-<body class="bg-gray-100 font-sans min-h-screen flex flex-col">
+<body>
+<main id="app"></main>
+<script>
+const K="gestaon_v1",$=s=>document.querySelector(s);
+let S={users:[],products:[],sales:[],session:null},view="dash",cart={},pay="PIX",period="hoje",rep={from:"",to:""},edit=null;
+try{S=Object.assign(S,JSON.parse(localStorage.getItem(K)||"{}"))}catch(e){}
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+const R=n=>n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const hash=async t=>[...new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t)))].map(b=>b.toString(16).padStart(2,"0")).join("");
+const toast=m=>{const t=document.createElement("div");t.className="toast";t.textContent=m;document.body.append(t);setTimeout(()=>t.remove(),2200)};
+const logged=()=>S.session&&Date.now()-S.session.t<864e5; // RF-01: expira em 24h
+const st=p=>p.qty<=0||p.qty<=p.min*0.5?["r","Crítico"]:p.qty<=p.min?["w","Baixo"]:["ok","Ok"];
+const day=d=>new Date(d).toISOString().slice(0,10);
 
-  <!-- TELA DE LOGIN (RF-01) -->
-  <div id="login-screen" class="fixed inset-0 bg-slate-900 bg-opacity-95 z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
-      <div class="text-center mb-6">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 text-white rounded-2xl text-2xl font-bold mb-3 shadow-lg shadow-indigo-200">
-          G
-        </div>
-        <h1 class="text-3xl font-extrabold text-gray-800">Gestã<span class="text-indigo-600">ON</span></h1>
-        <p class="text-gray-500 text-sm mt-1">Gestão inteligente para o microempreendedor</p>
-      </div>
+async function auth(reg){
+ const e=$("#em").value.trim().toLowerCase(),p=$("#pw").value,er=$("#er");
+ if(!/^\S+@\S+\.\S+$/.test(e))return er.textContent="Informe um e-mail válido.";
+ if(p.length<8)return er.textContent="A senha precisa ter no mínimo 8 caracteres.";
+ const h=await hash(p),u=S.users.find(x=>x.e===e);
+ if(reg){if(u)return er.textContent="Este e-mail já tem cadastro. Entre com a senha.";
+  S.users.push({e,h,empresa:$("#emp").value||"Minha Loja"});
+  if(!S.products.length)S.products=[["Água 500ml","Bebidas",1.2,3,40,10],["Pão de queijo","Padaria",1.5,4.5,25,8],["Café 250g","Mercearia",9,16.9,6,5],["Sabonete","Higiene",1.1,2.9,3,6]].map((a,i)=>({id:i+1,nome:a[0],cat:a[1],custo:a[2],preco:a[3],qty:a[4],min:a[5],on:1}))}
+ else if(!u||u.h!==h)return er.textContent="E-mail ou senha incorretos.";
+ S.session={e,t:Date.now()};save();render()}
+const out=()=>{S.session=null;save();render()};
 
-      <form id="form-login" onsubmit="realizarLogin(event)" class="space-y-4">
-        <div>
-          <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">E-mail do Usuário</label>
-          <div class="relative">
-            <i class="fa-solid fa-envelope absolute left-3 top-3 text-gray-400"></i>
-            <input type="email" id="login-email" value="mariana@gestaon.com" required class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm">
-          </div>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Senha</label>
-          <div class="relative">
-            <i class="fa-solid fa-lock absolute left-3 top-3 text-gray-400"></i>
-            <input type="password" id="login-senha" value="12345678" required class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm">
-          </div>
-        </div>
-        <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition shadow-md shadow-indigo-200 flex items-center justify-center gap-2">
-          <i class="fa-solid fa-right-to-bracket"></i> Entrar no Sistema
-        </button>
-      </form>
-    </div>
-  </div>
+function login(){
+ let reg=false;
+ const draw=()=>{$("#app").innerHTML=`<div class="card" style="max-width:420px;margin:8vh auto"><div class="brand" style="margin-bottom:6px"><span class="logo">G</span>GestãON</div><p style="color:var(--mut);margin-top:0">Vendas e estoque do seu negócio, no celular.</p>
+ ${reg?`<label for="emp">Nome do negócio</label><input id="emp">`:""}<label for="em">E-mail</label><input id="em" type="email" autocomplete="email"><label for="pw">Senha (mín. 8 caracteres)</label><input id="pw" type="password">
+ <div class="err" id="er"></div><button class="p" style="width:100%" id="go">${reg?"Criar conta":"Entrar"}</button><button class="g" style="width:100%;margin-top:8px" id="sw">${reg?"Já tenho conta":"Criar conta"}</button>
+ </div>`;
+  $("#go").onclick=()=>auth(reg);$("#sw").onclick=()=>{reg=!reg;draw()}};draw()}
 
-  <!-- NAVEGAÇÃO PRINCIPAL -->
-  <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-xl shadow-inner">G</div>
-        <span class="text-xl font-bold tracking-wide">Gestã<span class="text-indigo-400">ON</span></span>
-      </div>
-      <div class="flex items-center gap-4">
-        <span id="user-display" class="text-sm font-medium text-indigo-200 hidden sm:inline">Mariana Silva</span>
-        <button onclick="logout()" class="text-xs bg-indigo-800 hover:bg-indigo-700 px-3 py-1.5 rounded-lg border border-indigo-600 transition">
-          <i class="fa-solid fa-power-off"></i> Sair
-        </button>
-      </div>
-    </div>
-    <!-- MENUS DE NAVEGAÇÃO -->
-    <nav class="bg-indigo-950 px-4">
-      <div class="max-w-7xl mx-auto flex gap-1 overflow-x-auto py-2 text-sm font-medium">
-        <button onclick="mudarAba('dashboard')" id="btn-dashboard" class="nav-btn px-4 py-2 rounded-lg bg-indigo-600 text-white flex items-center gap-2">
-          <i class="fa-solid fa-chart-pie"></i> Dashboard
-        </button>
-        <button onclick="mudarAba('produtos')" id="btn-produtos" class="nav-btn px-4 py-2 rounded-lg hover:bg-indigo-800 text-indigo-200 flex items-center gap-2">
-          <i class="fa-solid fa-boxes-stacked"></i> Estoque / Produtos
-        </button>
-        <button onclick="mudarAba('vendas')" id="btn-vendas" class="nav-btn px-4 py-2 rounded-lg hover:bg-indigo-800 text-indigo-200 flex items-center gap-2">
-          <i class="fa-solid fa-cart-shopping"></i> Registrar Venda
-        </button>
-      </div>
-    </nav>
-  </header>
+function nav(){return`<nav class="np">${[["dash","▦","Painel"],["prod","▤","Produtos"],["venda","＋","Vender"],["rel","☰","Relatórios"],["cfg","⚙","Ajustes"]].map(([k,i,l])=>`<button class="${view===k?"on":""}" data-v="${k}"><span>${i}</span>${l}</button>`).join("")}</nav>`}
 
-  <!-- CONTEÚDO PRINCIPAL -->
-  <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full">
+function dash(){
+ const now=new Date(),t0=day(now),w=new Date(now-6*864e5),m=now.toISOString().slice(0,7);
+ const f=S.sales.filter(s=>period==="hoje"?day(s.d)===t0:period==="semana"?day(s.d)>=day(w):day(s.d).startsWith(m));
+ const fat=f.reduce((a,s)=>a+s.total,0),luc=f.reduce((a,s)=>a+s.lucro,0),top={};
+ f.forEach(s=>s.itens.forEach(i=>top[i.nome]=(top[i.nome]||0)+i.lucro));
+ const tp=Object.entries(top).sort((a,b)=>b[1]-a[1]).slice(0,5);
+ const days=[...Array(7)].map((_,i)=>day(now-(6-i)*864e5)),vals=days.map(d=>S.sales.filter(s=>day(s.d)===d).reduce((a,s)=>a+s.total,0)),mx=Math.max(...vals,1);
+ const low=S.products.filter(p=>p.on&&st(p)[0]!=="ok");
+ return`<h1>Painel</h1><div class="chips np">${[["hoje","Hoje"],["semana","7 dias"],["mes","Este mês"]].map(([k,l])=>`<button class="${period===k?"on":""}" data-p="${k}">${l}</button>`).join("")}</div>
+ <div class="grid" style="margin-top:12px"><div class="card kpi"><b>${R(fat)}</b><span>Faturado</span></div><div class="card kpi"><b>${R(luc)}</b><span>Lucro bruto${fat?` (${(luc/fat*100).toFixed(0)}%)`:""}</span></div><div class="card kpi"><b>${f.length}</b><span>Vendas</span></div></div>
+ ${low.length?`<div class="card"><h2 style="margin-top:0">Estoque para repor</h2>${low.map(p=>`<div class="item"><span>${p.nome}<br><small>${p.qty} un. (mínimo ${p.min})</small></span><span class="tag ${st(p)[0]}">${st(p)[1]}</span></div>`).join("")}</div>`:""}
+ <div class="card"><h2 style="margin-top:0">Faturamento dos últimos 7 dias</h2><svg viewBox="0 0 280 120" width="100%" role="img" aria-label="Gráfico de barras do faturamento diário">${vals.map((v,i)=>`<rect x="${i*40+8}" y="${100-v/mx*90}" width="26" height="${v/mx*90}" rx="4" fill="var(--pri)"/><text x="${i*40+21}" y="114" font-size="9" text-anchor="middle" fill="var(--mut)">${days[i].slice(8)}</text>`).join("")}</svg></div>
+ <div class="card"><h2 style="margin-top:0">Top 5 mais rentáveis</h2>${tp.length?tp.map(([n,v])=>`<div class="item"><span>${n}</span><b>${R(v)}</b></div>`).join(""):"<small>Nenhuma venda no período. Registre a primeira na aba Vender.</small>"}</div>`}
 
-    <!-- 1. DASHBOARD ANALÍTICO (RF-05) -->
-    <section id="aba-dashboard" class="space-y-6">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex items-center justify-between">
-          <div>
-            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Faturamento Total</p>
-            <h3 id="stat-faturamento" class="text-2xl font-black text-gray-800 mt-1">R$ 0,00</h3>
-          </div>
-          <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-xl">
-            <i class="fa-solid fa-dollar-sign"></i>
-          </div>
-        </div>
+function prod(){
+ const e=edit,q=(window.q||"").toLowerCase();
+ const form=e?`<div class="card"><h2 style="margin-top:0">${e.id?"Editar produto":"Novo produto"}</h2><div class="grid">
+ <div><label>Nome *</label><input id="f_n" value="${e.nome||""}"></div><div><label>SKU (opcional)</label><input id="f_s" value="${e.sku||""}"></div><div><label>Categoria *</label><input id="f_c" value="${e.cat||""}"></div>
+ <div><label>Preço de custo *</label><input id="f_k" type="number" step="0.01" value="${e.custo??""}"></div><div><label>Preço de venda *</label><input id="f_p" type="number" step="0.01" value="${e.preco??""}"></div>
+ <div><label>Quantidade *</label><input id="f_q" type="number" value="${e.qty??""}"></div><div><label>Estoque mínimo *</label><input id="f_m" type="number" value="${e.min??""}"></div></div>
+ <div class="err" id="er"></div><div class="row" style="margin-top:8px"><button class="g" id="fc">Cancelar</button><button class="p" id="fs">Salvar produto</button></div></div>`:"";
+ return`<h1>Produtos</h1><div class="row np"><input id="q" placeholder="Buscar por nome ou categoria" value="${window.q||""}"><button class="p" id="nw">Novo</button></div>${form}
+ <div class="card" style="margin-top:12px">${S.products.filter(p=>(p.nome+p.cat).toLowerCase().includes(q)).map(p=>`<div class="item" style="${p.on?"":"opacity:.5"}"><span>${p.nome}<br><small>${p.cat} · ${R(p.preco)} · ${p.qty} un.</small></span><span class="row" style="gap:6px"><span class="tag ${st(p)[0]}">${p.on?st(p)[1]:"Inativo"}</span><button class="g" data-e="${p.id}">Editar</button><button class="${p.on?"d":"g"}" data-t="${p.id}">${p.on?"Desativar":"Ativar"}</button></span></div>`).join("")||"<small>Nenhum produto encontrado.</small>"}</div>`}
 
-        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex items-center justify-between">
-          <div>
-            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total de Vendas</p>
-            <h3 id="stat-vendas" class="text-2xl font-black text-gray-800 mt-1">0</h3>
-          </div>
-          <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-xl">
-            <i class="fa-solid fa-bag-shopping"></i>
-          </div>
-        </div>
+function saveProd(){
+ const v=i=>$("#"+i).value.trim(),n=v("f_n"),c=v("f_c"),k=parseFloat(v("f_k")),p=parseFloat(v("f_p")),q=parseInt(v("f_q")),m=parseInt(v("f_m"));
+ if(!n||!c||[k,p,q,m].some(isNaN))return $("#er").textContent="Preencha todos os campos obrigatórios.";
+ if(p<k&&!confirm("O preço de venda é menor que o de custo. Salvar mesmo assim?"))return;
+ const o={nome:n,sku:v("f_s"),cat:c,custo:k,preco:p,qty:q,min:m};
+ if(edit.id)Object.assign(S.products.find(x=>x.id===edit.id),o);else S.products.push({id:Date.now(),on:1,...o});
+ edit=null;save();render();toast("Produto salvo")}
 
-        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex items-center justify-between">
-          <div>
-            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Alertas de Estoque Crítico</p>
-            <h3 id="stat-alertas" class="text-2xl font-black text-rose-600 mt-1">0</h3>
-          </div>
-          <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center text-xl">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-          </div>
-        </div>
-      </div>
+function venda(){
+ const ids=Object.keys(cart),tot=ids.reduce((a,i)=>a+cart[i]*S.products.find(p=>p.id==i).preco,0);
+ return`<h1>Nova venda</h1><div class="card">${S.products.filter(p=>p.on).map(p=>`<div class="item"><span>${p.nome}<br><small>${R(p.preco)} · ${p.qty} em estoque</small></span><span class="row" style="gap:6px">${cart[p.id]?`<button class="g" data-m="${p.id}" aria-label="Menos">−</button><b>${cart[p.id]}</b>`:""}<button class="p" data-a="${p.id}" aria-label="Adicionar ${p.nome}">+</button></span></div>`).join("")}</div>
+ <div class="card"><div class="chips">${["PIX","Dinheiro","Débito","Crédito"].map(x=>`<button class="${pay===x?"on":""}" data-y="${x}">${x}</button>`).join("")}</div>
+ <label for="dc">Desconto (R$, opcional)</label><input id="dc" type="number" step="0.01" min="0" value="0"><div class="err" id="er"></div>
+ <button class="p" style="width:100%;margin-top:8px" id="fin" ${ids.length?"":"disabled"}>Finalizar venda · ${R(tot)}</button></div>`}
 
-      <!-- Tabela de Vendas Recentes -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div class="p-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
-          <h2 class="font-bold text-gray-700 flex items-center gap-2">
-            <i class="fa-solid fa-clock-rotate-left text-indigo-600"></i> Histórico de Vendas Recentes
-          </h2>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
-              <tr>
-                <th class="p-3">ID</th>
-                <th class="p-3">Produto</th>
-                <th class="p-3">Qtd</th>
-                <th class="p-3">Pagamento</th>
-                <th class="p-3">Valor Total</th>
-              </tr>
-            </thead>
-            <tbody id="tabela-vendas-body" class="divide-y divide-gray-100">
-              <!-- Renderizado via JS -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+function finish(){
+ const ids=Object.keys(cart),ds=Math.max(0,parseFloat($("#dc").value)||0),itens=[];let tot=0,custo=0;
+ for(const i of ids){const p=S.products.find(x=>x.id==i);if(cart[i]>p.qty)return $("#er").textContent=`Estoque insuficiente de ${p.nome}: restam ${p.qty}.`;
+  itens.push({nome:p.nome,qtd:cart[i],lucro:cart[i]*(p.preco-p.custo)});tot+=cart[i]*p.preco;custo+=cart[i]*p.custo}
+ if(ds>tot)return $("#er").textContent="O desconto não pode ser maior que o total.";
+ ids.forEach(i=>S.products.find(x=>x.id==i).qty-=cart[i]);
+ itens[0].lucro-=ds;S.sales.push({id:Date.now(),d:new Date().toISOString(),pag:pay,total:tot-ds,lucro:tot-ds-custo,itens});
+ cart={};save();render();toast("Venda registrada e estoque atualizado")}
 
-    <!-- 2. GESTÃO DE ESTOQUE E PRODUTOS (RF-02 & RF-03) -->
-    <section id="aba-produtos" class="space-y-6 hidden">
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Cadastrar Produto -->
-        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 h-fit">
-          <h2 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-plus-circle text-indigo-600"></i> Cadastrar Novo Produto
-          </h2>
-          <form id="form-produto" onsubmit="adicionarProduto(event)" class="space-y-3">
-            <div>
-              <label class="block text-xs font-semibold text-gray-600">Nome do Produto *</label>
-              <input type="text" id="prod-nome" required class="w-full mt-1 p-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <label class="block text-xs font-semibold text-gray-600">Preço Custo (R$)</label>
-                <input type="number" step="0.01" id="prod-custo" required class="w-full mt-1 p-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-              </div>
-              <div>
-                <label class="block text-xs font-semibold text-gray-600">Preço Venda (R$)</label>
-                <input type="number" step="0.01" id="prod-venda" required class="w-full mt-1 p-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-              </div>
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <label class="block text-xs font-semibold text-gray-600">Qtd em Estoque</label>
-                <input type="number" id="prod-qtd" required class="w-full mt-1 p-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-              </div>
-              <div>
-                <label class="block text-xs font-semibold text-gray-600">Estoque Mínimo</label>
-                <input type="number" id="prod-min" required class="w-full mt-1 p-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-              </div>
-            </div>
-            <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg text-sm shadow transition">
-              Salvar Produto
-            </button>
-          </form>
-        </div>
+function rel(){
+ const f=S.sales.filter(s=>(!rep.from||day(s.d)>=rep.from)&&(!rep.to||day(s.d)<=rep.to)).slice().reverse(),tot=f.reduce((a,s)=>a+s.total,0),luc=f.reduce((a,s)=>a+s.lucro,0);
+ const emp=(S.users.find(u=>u.e===S.session.e)||{}).empresa;
+ return`<h1>Relatório de vendas</h1><div class="pr"><b>${emp}</b><br>Emitido em ${new Date().toLocaleString("pt-BR")}</div>
+ <div class="card np"><div class="grid"><div><label>De</label><input type="date" id="r1" value="${rep.from}"></div><div><label>Até</label><input type="date" id="r2" value="${rep.to}"></div></div><button class="p" style="width:100%;margin-top:10px" id="pdf">Exportar PDF</button><small style="color:var(--mut)">Na janela de impressão, escolha “Salvar como PDF”.</small></div>
+ <div class="card scroll"><table><tr><th>Data</th><th>Itens</th><th>Pagamento</th><th>Total</th></tr>${f.map(s=>`<tr><td>${new Date(s.d).toLocaleString("pt-BR")}</td><td>${s.itens.map(i=>i.qtd+"× "+i.nome).join(", ")}</td><td>${s.pag}</td><td>${R(s.total)}</td></tr>`).join("")||"<tr><td colspan=4>Nenhuma venda no período.</td></tr>"}</table></div>
+ <div class="card"><div class="row"><span>Total faturado</span><b>${R(tot)}</b></div><div class="row"><span>Lucro bruto</span><b>${R(luc)}</b></div></div>
+ <button class="g np" id="lo" style="width:100%">Sair da conta</button>`}
 
-        <!-- Lista de Produtos -->
-        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          <div class="p-4 bg-gray-50 border-b border-gray-200">
-            <h2 class="font-bold text-gray-700 flex items-center gap-2">
-              <i class="fa-solid fa-list text-indigo-600"></i> Catálogo e Posição do Estoque
-            </h2>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm">
-              <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
-                <tr>
-                  <th class="p-3">Produto</th>
-                  <th class="p-3">Preço Venda</th>
-                  <th class="p-3">Estoque</th>
-                  <th class="p-3">Status</th>
-                  <th class="p-3 text-center">Ações</th>
-                </tr>
-              </thead>
-              <tbody id="tabela-produtos-body" class="divide-y divide-gray-100">
-                <!-- Renderizado via JS -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3. CHECKOUT DE VENDAS RÁPIDAS (RF-04) -->
-    <section id="aba-vendas" class="space-y-6 hidden">
-      <div class="max-w-xl mx-auto bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-        <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-          <i class="fa-solid fa-cash-register text-emerald-600"></i> Registrar Nova Venda (Checkout)
-        </h2>
-
-        <form id="form-venda" onsubmit="realizarVenda(event)" class="space-y-4">
-          <div>
-            <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Selecione o Produto *</label>
-            <select id="venda-produto" onchange="atualizarPrecoVenda()" required class="w-full p-2.5 border rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-              <!-- Opções via JS -->
-            </select>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Quantidade *</label>
-              <input type="number" id="venda-qtd" min="1" value="1" onchange="calcularTotalVenda()" onkeyup="calcularTotalVenda()" required class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Forma de Pagamento</label>
-              <select id="venda-pagamento" class="w-full p-2.5 border rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                <option value="PIX">PIX</option>
-                <option value="Cartão de Crédito">Cartão de Crédito</option>
-                <option value="Cartão de Débito">Cartão de Débito</option>
-                <option value="Dinheiro">Dinheiro</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200 flex justify-between items-center">
-            <span class="text-sm font-semibold text-emerald-800">Total a Pagar:</span>
-            <span id="venda-total-display" class="text-2xl font-black text-emerald-700">R$ 0,00</span>
-          </div>
-
-          <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-base shadow-lg shadow-emerald-200 transition flex items-center justify-center gap-2">
-            <i class="fa-solid fa-check-circle"></i> Finalizar Venda em 1 Clique
-          </button>
-        </form>
-      </div>
-    </section>
-
-  </main>
-
-  <footer class="bg-white border-t py-4 text-center text-xs text-gray-500">
-    <strong>GestãON</strong> &copy; 2026 — Projeto Integrador Engenharia de Computação (Karoline Fernandes)
-  </footer>
-
-  <!-- LÓGICA EM JAVASCRIPT -->
-  <script>
-    // Estado da Aplicação (Simulação de Banco de Dados local)
-    let appState = {
-      produtos: [
-        { id: 1, nome: "Camiseta Algodão Premium", custo: 25.00, venda: 59.90, qtd: 15, min: 5 },
-        { id: 2, nome: "Calça Jeans Slim", custo: 45.00, venda: 119.90, qtd: 2, min: 5 }, // Estoque crítico!
-        { id: 3, nome: "Boné Streetwear", custo: 15.00, venda: 39.90, qtd: 20, min: 8 }
-      ],
-      vendas: [
-        { id: 101, produtoNome: "Camiseta Algodão Premium", qtd: 1, pagamento: "PIX", total: 59.90 }
-      ]
-    };
-
-    // Inicialização do App
-    document.addEventListener("DOMContentLoaded", () => {
-      renderizarTudo();
-    });
-
-    function realizarLogin(e) {
-      e.preventDefault();
-      document.getElementById("login-screen").classList.add("hidden");
-    }
-
-    function logout() {
-      document.getElementById("login-screen").classList.remove("hidden");
-    }
-
-    function mudarAba(abaNome) {
-      document.querySelectorAll("main > section").forEach(sec => sec.classList.add("hidden"));
-      document.querySelectorAll(".nav-btn").forEach(btn => {
-        btn.classList.remove("bg-indigo-600", "text-white");
-        btn.classList.add("hover:bg-indigo-800", "text-indigo-200");
-      });
-
-      document.getElementById(`aba-${abaNome}`).classList.remove("hidden");
-      const btnAtivo = document.getElementById(`btn-${abaNome}`);
-      btnAtivo.classList.add("bg-indigo-600", "text-white");
-      btnAtivo.classList.remove("hover:bg-indigo-800", "text-indigo-200");
-    }
-
-    function renderizarTudo() {
-      renderizarProdutos();
-      renderizarVendas();
-      renderizarDashboard();
-      atualizarSelectVendas();
-    }
-
-    function renderizarProdutos() {
-      const tbody = document.getElementById("tabela-produtos-body");
-      tbody.innerHTML = "";
-
-      appState.produtos.forEach(p => {
-        const isCritico = p.qtd <= p.min;
-        const statusBadge = isCritico 
-          ? `<span class="bg-rose-100 text-rose-700 text-xs font-bold px-2 py-1 rounded-full"><i class="fa-solid fa-triangle-exclamation"></i> Estoque Baixo (${p.qtd})</span>`
-          : `<span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-1 rounded-full">Normal (${p.qtd})</span>`;
-
-        tbody.innerHTML += `
-          <tr class="hover:bg-gray-50">
-            <td class="p-3 font-semibold text-gray-800">${p.nome}</td>
-            <td class="p-3 text-gray-600">R$ ${p.venda.toFixed(2)}</td>
-            <td class="p-3 font-bold">${p.qtd} un</td>
-            <td class="p-3">${statusBadge}</td>
-            <td class="p-3 text-center">
-              <button onclick="deletarProduto(${p.id})" class="text-rose-500 hover:text-rose-700 px-2 py-1 text-xs">
-                <i class="fa-solid fa-trash"></i>
-              </button>
-            </td>
-          </tr>
-        `;
-      });
-    }
-
-    function adicionarProduto(e) {
-      e.preventDefault();
-      const novo = {
-        id: Date.now(),
-        nome: document.getElementById("prod-nome").value,
-        custo: parseFloat(document.getElementById("prod-custo").value),
-        venda: parseFloat(document.getElementById("prod-venda").value),
-        qtd: parseInt(document.getElementById("prod-qtd").value),
-        min: parseInt(document.getElementById("prod-min").value)
-      };
-
-      appState.produtos.push(novo);
-      document.getElementById("form-produto").reset();
-      renderizarTudo();
-      alert("Produto cadastrado com sucesso!");
-    }
-
-    function deletarProduto(id) {
-      if(confirm("Tem certeza que deseja remover este produto?")) {
-        appState.produtos = appState.produtos.filter(p => p.id !== id);
-        renderizarTudo();
-      }
-    }
-
-    function atualizarSelectVendas() {
-      const select = document.getElementById("venda-produto");
-      select.innerHTML = `<option value="">-- Escolha um produto --</option>`;
-      appState.produtos.forEach(p => {
-        select.innerHTML += `<option value="${p.id}">${p.nome} (Estoque: ${p.qtd}) - R$ ${p.venda.toFixed(2)}</option>`;
-      });
-    }
-
-    function atualizarPrecoVenda() {
-      calcularTotalVenda();
-    }
-
-    function calcularTotalVenda() {
-      const pId = parseInt(document.getElementById("venda-produto").value);
-      const qtd = parseInt(document.getElementById("venda-qtd").value) || 0;
-      const produto = appState.produtos.find(p => p.id === pId);
-
-      const totalDisplay = document.getElementById("venda-total-display");
-      if (produto && qtd > 0) {
-        totalDisplay.textContent = `R$ ${(produto.venda * qtd).toFixed(2)}`;
-      } else {
-        totalDisplay.textContent = "R$ 0,00";
-      }
-    }
-
-    function realizarVenda(e) {
-      e.preventDefault();
-      const pId = parseInt(document.getElementById("venda-produto").value);
-      const qtd = parseInt(document.getElementById("venda-qtd").value);
-      const pagamento = document.getElementById("venda-pagamento").value;
-
-      const produto = appState.produtos.find(p => p.id === pId);
-
-      if (!produto) {
-        alert("Selecione um produto válido!");
-        return;
-      }
-
-      if (produto.qtd < qtd) {
-        alert(`Estoque insuficiente! Saldo atual: ${produto.qtd}`);
-        return;
-      }
-
-      // Baixa no Estoque (RF-03 & RF-04)
-      produto.qtd -= qtd;
-
-      // Registro de Venda
-      const novaVenda = {
-        id: 100 + appState.vendas.length + 1,
-        produtoNome: produto.nome,
-        qtd: qtd,
-        pagamento: pagamento,
-        total: produto.venda * qtd
-      };
-
-      appState.vendas.unshift(novaVenda);
-
-      document.getElementById("form-venda").reset();
-      calcularTotalVenda();
-      renderizarTudo();
-
-      alert("🎉 Venda realizada e estoque atualizado com sucesso!");
-      mudarAba('dashboard');
-    }
-
-    function renderizarVendas() {
-      const tbody = document.getElementById("tabela-vendas-body");
-      tbody.innerHTML = "";
-
-      appState.vendas.forEach(v => {
-        tbody.innerHTML += `
-          <tr class="hover:bg-gray-50">
-            <td class="p-3 font-mono text-xs text-gray-500">#${v.id}</td>
-            <td class="p-3 font-medium text-gray-800">${v.produtoNome}</td>
-            <td class="p-3 font-bold">${v.qtd}</td>
-            <td class="p-3"><span class="bg-gray-100 text-gray-700 text-xs px-2 py-0.5 rounded">${v.pagamento}</span></td>
-            <td class="p-3 font-bold text-emerald-600">R$ ${v.total.toFixed(2)}</td>
-          </tr>
-        `;
-      });
-    }
-
-    function renderizarDashboard() {
-      const faturamento = appState.vendas.reduce((acc, v) => acc + v.total, 0);
-      const totalVendas = appState.vendas.length;
-      const alertas = appState.produtos.filter(p => p.qtd <= p.min).length;
-
-      document.getElementById("stat-faturamento").textContent = `R$ ${faturamento.toFixed(2)}`;
-      document.getElementById("stat-vendas").textContent = totalVendas;
-      document.getElementById("stat-alertas").textContent = alertas;
-    }
-  </script>
+const ACC={teal:["#0b6e66","#3fc1b4","Verde-água"],blue:["#2457d6","#7aa2ff","Azul"],violet:["#6d3fd1","#b79bff","Violeta"],orange:["#c2570c","#ffa15c","Laranja"]};
+function theme(){const t=S.theme||"auto",dk=t==="dark"||(t==="auto"&&matchMedia("(prefers-color-scheme:dark)").matches),a=ACC[S.accent||"teal"],r=document.documentElement;if(t==="auto")r.removeAttribute("data-theme");else r.dataset.theme=t;r.style.setProperty("--pri",dk?a[1]:a[0]);r.style.setProperty("--onp",dk?"#06141a":"#fff")}
+matchMedia("(prefers-color-scheme:dark)").addEventListener("change",theme);
+function cfg(){return`<h1>Ajustes</h1><div class="card"><h2 style="margin-top:0">Tema</h2><div class="chips">${[["auto","Automático"],["light","Claro"],["dark","Escuro"]].map(([k,l])=>`<button class="${(S.theme||"auto")===k?"on":""}" data-th="${k}">${l}</button>`).join("")}</div><h2>Cor de destaque</h2><div class="chips">${Object.entries(ACC).map(([k,a])=>`<button class="sw ${(S.accent||"teal")===k?"on":""}" data-ac="${k}" style="background:${a[0]}" aria-label="${a[2]}"></button>`).join("")}</div></div><div class="card"><div class="row"><span>${S.session.e}</span><button class="g" id="so2">Sair da conta</button></div></div>`}
+function render(){
+ theme();if(!logged()){S.session=null;return login()}
+ $("#app").innerHTML=`<div class="row np top"><span class="brand"><span class="logo">G</span>GestãON</span><span class="row" style="gap:8px"><small>${S.session.e}</small><button class="g" id="so">Sair</button></span></div>`+({dash,prod,venda,rel,cfg}[view])()+nav();
+ document.querySelectorAll("[data-v]").forEach(b=>b.onclick=()=>{view=b.dataset.v;render()});
+ const on=(s,f)=>document.querySelectorAll(s).forEach(b=>b.onclick=()=>f(b.dataset));
+ on("[data-p]",d=>{period=d.p;render()});
+ on("[data-e]",d=>{edit={...S.products.find(p=>p.id==d.e)};render()});
+ on("[data-t]",d=>{const p=S.products.find(x=>x.id==d.t);p.on=p.on?0:1;save();render()});
+ on("[data-a]",d=>{cart[d.a]=(cart[d.a]||0)+1;render()});
+ on("[data-m]",d=>{if(--cart[d.m]<=0)delete cart[d.m];render()});
+ on("[data-y]",d=>{pay=d.y;render()});on("[data-th]",d=>{S.theme=d.th;save();render()});on("[data-ac]",d=>{S.accent=d.ac;save();render()});
+ const b=(i,f)=>{const e=$("#"+i);if(e)e.onclick=f};
+ b("nw",()=>{edit={};render()});b("fc",()=>{edit=null;render()});b("fs",saveProd);b("fin",finish);b("pdf",()=>print());b("lo",out);b("so",out);b("so2",out);
+ const q=$("#q");if(q)q.oninput=()=>{window.q=q.value;render();const n=$("#q");n.focus();n.setSelectionRange(99,99)};
+ const r1=$("#r1");if(r1){r1.onchange=()=>{rep.from=r1.value;render()};$("#r2").onchange=e=>{rep.to=e.target.value;render()}}}
+render();
+</script>
 </body>
 </html>
